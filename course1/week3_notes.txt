@@ -1,0 +1,255 @@
+## Why is data definition hard?
+
+## More label ambiguity examples
+
+Data definition questions
+
+	1. What is the input x?
+		e.g images:  lighting/constrast/resolution correct?
+		if not even a person can detect a scratch, then an algorithm will not detect the scratch
+
+		a) What features need to be included?
+
+	2. What is the target label y?
+		a) How can we ensure labelers give consistent labels?
+
+## Major types of data problems
+
+1. Unstructured or Structured Data?
+2. Small Data (<=10000) or Big Data (>10000)?
+
+Unstructured vs. Structured Data
+
+- Unstructured Data:
+1. May or may not have huge collection of unlabeled examples x;
+2. Human can label more data;
+3. Data Augmentation more likely to be helpful.
+
+- Structured Data:
+1. May be more difficult to obtain more data;
+2. Human labeling may not be possible (with some exceptions);
+
+Small vs. Big Data
+
+- Small Data:
+1. Clean labels are critical;
+2. Can manually look through dataset and fix labels;
+3. Can get all the labelers to talk to each other
+
+- Big Data:
+1. Emphasis data process (smaller team to establish a consistent label definition and then share that definition to implement the same process);
+
+
+
+## Small data and label consistency
+
+- Why label consistency is important?
+
+It is of extreme importance in order to better define the problem itself. Sometimes it can be better than a big data with noisy labels.
+
+
+- Big data problems can have small data challenges too:
+
+1. Problems with a large dataset but where there's a long tail of rare events in the input will have small data challenged too. e.g. Web search, self-driving cars (rare occurrences of a child passing through a zebra cross), and product recommendation systems
+
+## Improving label consistency - still missing tools
+
+1. Having multiple labelers label same example;
+2. When there is disagreement, have MLE, subject matter expert (SME) and/or labelers discuss definition of y to reach agreement;
+3. If labelers believe that x doesn't contain enough information, consider changing x;
+4. Iterate until it is hard to significantly increase agreement;
+
+- Standardize labels
+- Merge classes (e.g. deep scratch vs. shallow scratch --> scratch)
+- Have a class/label to capture uncertainty
+	(e.g. Defect: 0 or 1 ---> Alternative: 0 or Boderline or 1)
+
+
+## Human level performance (HLP)
+
+1. Estimates Bayes error/irreducible error to help with error analysis and prioritization;
+
+Other uses of HLP:
+
+1. In academia, establish and beat a respectable benchmark to support publication;
+2. Business or product owner asks for 99% accuracy. HLP helps establish a more reasonable target;
+3. "Prove" the ML system is superior to humans doing the job and thus the business or product owner should adopt it. (Use with caution or don't use it)
+
+
+## Raising HLP
+
+When the ground truth label is externelly defined, HLP gives an estimate for Bayes error/irreducible error
+But often ground truth is just another human label.
+
+	- When the label y comes from a human label, HLP << 100% may indicate ambiguous labeling instructions;
+	- Improving label consistency will raise HLP;
+	- This makes it harder for ML to beat HLP. But the more consistent labels will raise ML performance, which is ultimately likely to benefit the actual application performance. 
+
+
+- HLP on structured data
+
+	Structured data problems are less likely to involve human labelers thus HLP is less frequently used. 
+
+	Some exceptions:
+		1. User ID merging: Same person?
+		2. Based on network traffic, is the computer hacked?
+		3. Is the transaction fraudulent?
+		4. Spam account? Bot?
+		5. From GPS, what is the mode of transportation (foot, bike, car, bus?)
+
+## Obtaining Data
+
+- How long should you spend obtaining data?
+	1. Get into iteration loop as quickly as possible (Don not spend too much time collecting the data, you can always go back)
+	2. Question: How much data can we obtain in k days?
+	3. Exception: If you have worked on the problem before and from experience you know you need m examples
+
+- Inventory data:
+	1. Brainstorm list of data sources
+
+- Labeling data
+	1. Options: In-house vs. outsourced vs. crowdsourced;
+	2. Having MLEs label data is expensive. But doing this for just a few days is usually fine;
+		Which is not that bad, since you gain knowledge and sensibility about the project
+	3. Who is qualified to label?
+		- One may need SME (subject matter expert)
+		- Recommender systems - maybe impossible to label well
+	4. Don't increase data by more than 10x at a time - this may avoid overinvesting in loads of data
+
+## Data Pipeline
+
+Multiple steps of processing:
+1. Raw DATA ---> Data Cleaning ---> ML
+
+Example:
+1. Development: RAW DATA --> Preprocessing scripts --> ML --> Test set Performance
+2. Production:  New Raw Data --> Replicate scripts --> ML --> Test set Performance
+
+
+PoC 
+---> Goal is decide if the application is workable and worth deploying
+---> Focus on getting the prototype to work!
+---> It's ok if data pre-processing is manual. But take extensive notes/comments
+
+Production phase:
+---> After project utility is established, use more sophisticated tools to make sure the data pipeline is replicable
+---> E.g.: Tensorflow Transform, Apache Beam, Airflow
+
+
+## Meta-data, data provenance and lineage
+
+Keep track of:
+	1. Data Provenance --> Where it comes from
+	2. Lineage --> Sequence of steps
+
+NOTE: To be honest, the tools for keeping track of data provenance and lineage are still immature into this machine learning world. I find that extensive documentation can help and some formal tools like TensorFlow Transform can also help but solving this type of problem is still not something that we are great at as a community yet
+
+Meta-data: 
+	1. Definition: It is data about data. E.g. For visual inspection: Time, factory, line#, camera settings, phone model, inspector ID, ...
+	2. Store metadata - it is easier to go back
+	3. Useful for:
+		- Error analysis. Spotting unexpected effects;
+		- Keeping track of data provenance;
+
+
+## Balanced Train/Dev/Test splits in small data problems.
+	1. It is important to have a balanced split in the minority samples;
+	2. No need to worry about this with large datasets - a random split will be representative.
+
+
+## Scoping
+
+- What is scoping?
+	1. Is picking the right project to work on. 
+
+- Questions:
+	1. What project should we work on?
+	2. What are the metrics for success?
+	3. What are the resources (data, time, people) needed?
+
+## Scoping process
+
+- Brainstorm business problems (not AI problems) - We want to hear about the business in the beginning
+- What are the top 3 things you wish were working better?
+	1. Increase conversion
+	2. Reduce inventory
+	3. Increase margin (profit per item)
+
+- Brainstorm AI solutions - Design thinking
+- Assess the feasibility and value of potential solutions
+
+## Separating problem identification from solution
+
+## Diligence on feasibility and value
+
+- Feasibility: Is this project technically feasible?
+
+	Use external benchmark (literature, other company, competitor)
+
+- Why use HLP to benchmark?
+
+	- People are very good on unstructured data tasks
+	- CRITERIA: Can human, given the same data, perform the task?
+
+
+- Do we have features that are predictive?
+
+	Given past purchases, predict future purchases - Predictable
+	Given weather, predict shopping mall foot traffic - Predictable
+	Given DNA info, predict heart disease - Not sure
+	Given social media chatter, predict demand for a clothing style - Not Sure
+	Given history of a stock's price, predict future price of that stock - Not doable
+
+
+- History of project
+
+
+## Diligence on value
+
+- MLE metrics vs. Business metrics
+	
+	E.g.:
+
+	Word-level accuracy (MLE M)--> Query-level accuracy --> Search result quality --> User engagement --> Revenue (B.M)
+
+	- Have technical and business teams try to agree on metrics that both are comfortable with.
+	- Important to do Fermi estimates
+
+- Ethical considerations:
+	1. Is this project creating net positive societal value?
+	2. Is this project reasonably fair and free from bias?
+	3. Have any ethical concers been openly aired and debated?
+
+
+## Milestones & Resourcing
+
+	Key specifications:
+	1. ML metrics (accuracy, precision/recall, etc);
+	2. Software metrics (latency, throughput, etc. given compute resources)
+	3. Business metrics (revenue, etc.)
+	4. Resources needed (data, personnel, help from other teams)
+	5. Timeline (that can guide the team)
+
+	If unsure, consider benchmarking to other projects, or building a POC (Proof of Concept) first
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

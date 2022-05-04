@@ -1,0 +1,170 @@
+# Week2
+
+## Why low average error isn't good enough
+
+Issues:
+- Rare classes or skewed data distributions
+	
+
+## Establish a baseline
+
+HLP - Human Level Performance
+ 
+Unstructured Data
+- HLP - Can and should be used - human being are really good at understanding unstructured data, such as images, audio.
+
+Structured Data
+- HLP - it is not a good baseline
+- Do a Literature search for state-of-the-art/open source
+
+
+Steps:
+1. Quick-and-dirty implementation;
+2. Performance of older system
+
+Baseline helps to indicate what mught be possible. In some cases (such as HLP) it also gives a sense of what is irreducible error/Bayes error.
+
+
+## Tips for getting started
+
+1. Literature search to see what's possible (courses, blogs, open-source projects);
+2. Find open-source implementations if available;
+3. A reasonable algorithm with good data will often outperform a great algorithm with no so good data;
+4. Deployment constraints when picking a model? 
+	4.1 Yes - If baseline is already established and goal is to build an deploy;
+	4.1 No - if the purpose is to establish a vaseline and determine what is possible and might be worth pursuing
+
+5. Sanity-check for code and algorithm
+	5.1 Try to overfit a small training dataset before training on a large one (!);
+	E.g. Try to train and predict a small number of samples, just to check what works
+
+ML is an iterative process:
+Model + Hyperparameters + Data --> Training --> Error Analysis --> Audit Performance
+
+## Error Analysis Example
+
+- Sometimes is a manually problem, that should be check
+- Iterative process of error analysis
+	1. Examine/tag examples <--> Propose tags
+
+	E.g. Visual Inspection:
+		1. Specific class labels (scratch, dent, etc.)
+		2. Image properties (blurry, dark background, ets)
+		3. Other meta-data: phone model, factory
+
+	E.g. Product recommendations:
+		1. User demographics;
+		2. Product features/categories
+
+
+Useful metrics for each tag
+1. What fraction of errors has that tag?
+2. Of all data with that tag, what fraction is misclassified and why?
+3. What fraction of all the data has that tag?
+4. How much room for improvement is there on data with that tag?
+
+
+## Prioritizing what to work on
+
+Decide on most important categories to work on based on:
+	1. How much room for improvement there is;
+	2. How frequently that category appears;
+	3. How easy is to improve accuracy in that category (more ideas);
+	4. How important it is to improve in that category;
+
+Adding/Improving data for specific categories
+	For categories you want to prioritize:
+	1. Collect more data
+	2. Use data augmentation to get more data
+	3. Improve label accuracy/data quality
+
+## Skewed datasets
+
+	Examples: 
+		Manufacturing (99.7% no defect and 0.3% defect)
+		Medical Diagnosis (99% of patients don't have a disease)
+		Speech Recognition (Word detection)
+
+	Metrics that should be used:
+		- Confusion matrix: Precision and Recall
+			Precision: From all the samples predicted as 1, which ones were correctly predicted
+			Recall: From all the positive samples, which ones were correctly predicted
+
+			F1 score: 2 / ((1/Precision) + (1/Recall))
+
+	Multi-class metrics: Check Precision, Recall, and F1 score in all the classes (helps prioritization)
+
+## Performance Auditing
+
+### Auduting framework
+Check for accuracy, fairness/bias, and other problems:
+1. Brainstorm the ways the system might go wrong
+	- Performance on subsets of data (ethnicity, gender)
+	- How common are certain errors (FP, FN)
+	. Performance on rare classes
+
+2. Establish metrics to assess performance against there issues on appropriate slices of data
+3. Get business/product owner buy-in
+
+
+## Data-centric AI development
+
+
+Model-centric view -> Take the data you have, and develop a model that does as well as possible on it
+
+Data-centric view -> The quality of the data is a paramount. Use tools to improve the data quality; this will allow multiple models to do well.
+
+
+## A useful picture of data augmentation
+
+
+## Data Augmentation
+
+## Can adding data hurt? - Unstructure Data
+
+For unstructured data problems, if:
+	1. The model is large (low bias);
+	2. The mapping x -> y is clear (e.g. given only input x, humans can make accurate predictions);
+
+	Then, adding data rarely hurts accuracy
+
+
+## Adding Features - Structure Data
+
+- Recommendation Systems: 
+	1. There has been a shift from Collaborative Filtering (what people are more similar to you and recommend the same sort of itens) to Content based filtering (itens that are similar to each other (cold-start));
+
+
+## Experiment tracking
+
+- Best pratices: 
+	1. Algorithm/code versioning
+	2. Dataset used
+	3. Hyperparameters
+	4. Results
+
+- Tracking tools:
+	1. Text files (does not scale well)
+	2. Spreadsheets (scale ok - since we can share them)
+	3. Experiment tracking system
+		1. Weight & Biases
+		2. MLflow
+		3. Sage Maker Studio (aws?)
+		4. Landing.AI
+
+- Desirable features
+	1. Information needed to replicate results
+		- Pulls data of the internet? - That can change
+	2. Experiment results, ideally with summary metrics/analysis
+	3. Perhaps also: Resource monitoring, visualization, model error analysis
+
+## From big data to good data
+	Try to ensure consistently high-quality data in all phases of the ML project lifecycle
+
+	Good data:
+	1. Covers important cases (good coverage of inputs x)
+		- Data Augmentation can help you here
+	2. Is defined consistently (definition of labels y is unambiguous)
+	3. Has timely feedback from production data (distribution covers data drift and concept drift)
+	4. Is sized appropriately
+
